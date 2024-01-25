@@ -2,9 +2,12 @@ function App() {
 
 
   return (
-    <h1 className="text-3xl font-inter font-bold ">
-      Hello world!
-    </h1>
+    <main className="flex h-dvh">
+      {/* public routes */}
+      helooo
+
+      {/* private routes */}
+    </main>
   )
 }
 
