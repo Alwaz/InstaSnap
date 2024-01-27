@@ -1,6 +1,8 @@
 import { Route, Routes } from "react-router-dom"
-import SignInForm from "./auth/forms/SignInForm"
-import Home from "./root/pages/Home"
+import { LoginForm, SignInForm } from "./_auth/forms"
+import { Home } from "./_root/pages"
+import AuthLayout from "./_auth/AuthLayout"
+import RootLayout from "./_root/RootLayout"
 
 function App() {
 
@@ -9,12 +11,17 @@ function App() {
     <main className="flex h-dvh">
       <Routes>
         {/* public routes */}
-        <Route path="/sign-in" element={<SignInForm />} />
-        {/* private routes */}
-        <Route index element={<Home />} />
-      </Routes>
-      helooo
+        <Route element={<AuthLayout />}>
+          <Route path="/sign-in" element={<SignInForm />} />
+          <Route path="/login" element={<LoginForm />} />
+        </Route>
 
+
+        {/* private routes */}
+        <Route element={<RootLayout />}>
+          <Route index element={<Home />} />
+        </Route>
+      </Routes>
     </main>
   )
 }
