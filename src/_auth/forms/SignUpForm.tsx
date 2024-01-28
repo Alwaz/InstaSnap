@@ -13,7 +13,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from '@/components/ui/input';
-import { Logo, Loader } from '@/components/shared';
+import { Loader } from '@/components/shared';
 import { Link } from 'react-router-dom';
 
 const SignInForm: React.FC = () => {
@@ -38,8 +38,6 @@ const SignInForm: React.FC = () => {
     return (
         <Form {...form}>
             <div className='sm:w-420 flex flex-col justify-center items-center'>
-                <Logo />
-
                 <h2 className='text-2xl font-semibold tracking-tight sm:pt-12 pt-5'>Create a new account</h2>
                 <p className="text-light md:text-base text-sm mt-2">
                     To use InstaSnap, Please enter your details

@@ -1,3 +1,4 @@
+import { Logo } from '@/components/shared';
 import React from 'react'
 import { Navigate, Outlet } from 'react-router-dom';
 
@@ -13,6 +14,7 @@ const AuthLayout: React.FC = () => {
                     <Navigate to="/" />
                     :
                     <section className='flex flex-1 flex-col justify-center items-center py-10 '>
+                        <Logo />
                         <Outlet />
                     </section>
             }
