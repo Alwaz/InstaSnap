@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod";
@@ -15,9 +15,12 @@ import {
 import { Input } from '@/components/ui/input';
 import { Loader } from '@/components/shared';
 import { Link } from 'react-router-dom';
+import { createUserAccount } from '@/lib/appwrite/api';
+
 
 const SignInForm: React.FC = () => {
-    const isLoading = false;
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+
 
     const form = useForm<z.infer<typeof SignupFormSchema>>({
         resolver: zodResolver(SignupFormSchema),
@@ -29,11 +32,19 @@ const SignInForm: React.FC = () => {
         },
     })
 
-    // 2. Define a submit handler.
-    function onSubmit(values: z.infer<typeof SignupFormSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values)
+
+    async function onSubmit(values: z.infer<typeof SignupFormSchema>) {
+        try {
+            setIsLoading(true)
+            const createNewUser = await createUserAccount(values)
+            if (createNewUser.status) {
+                setIsLoading(false)
+                // TODO: navigate to "/"
+            }
+        } catch (error) {
+            setIsLoading(false)
+            console.error(error)
+        }
     }
     return (
         <Form {...form}>
