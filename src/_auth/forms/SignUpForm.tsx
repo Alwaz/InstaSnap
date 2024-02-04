@@ -15,11 +15,15 @@ import {
 import { Input } from '@/components/ui/input';
 import { Loader } from '@/components/shared';
 import { Link } from 'react-router-dom';
-import { createUserAccount } from '@/lib/appwrite/api';
+import { useToast } from '@/components/ui/use-toast';
+import { useCreateUserAccount, useSignInAccount } from '@/lib/react-query/queries-and-mutations';
 
 
 const SignInForm: React.FC = () => {
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const { toast } = useToast();
+    const { mutateAsync: createUserAccount, isLoading: isCreatingAccount } = useCreateUserAccount();
+    const { mutateAsync: signInAccount, isLoading: isSigningIn } = useSignInAccount();
+
 
 
     const form = useForm<z.infer<typeof SignupFormSchema>>({
@@ -35,14 +39,27 @@ const SignInForm: React.FC = () => {
 
     async function onSubmit(values: z.infer<typeof SignupFormSchema>) {
         try {
-            setIsLoading(true)
-            const createNewUser = await createUserAccount(values)
-            if (createNewUser.status) {
-                setIsLoading(false)
-                // TODO: navigate to "/"
+            const newUser = await createUserAccount(values)
+
+            if (!newUser) {
+                // show Toast with error message
+                return toast({
+                    title: "Sign up failed. Please try again.",
+
+                })
+            }
+
+            // Create a new user session
+            const session = await signInAccount({ email: values.email, password: values.password })
+
+
+            if (!session) {
+                return toast({
+                    title: "Sign up failed. Please try again.",
+
+                })
             }
         } catch (error) {
-            setIsLoading(false)
             console.error(error)
         }
     }
@@ -111,7 +128,7 @@ const SignInForm: React.FC = () => {
                         )}
                     />
                     <Button className='bg-lime text-primary hover:bg-lime/90' type="submit">
-                        {isLoading ?
+                        {isCreatingAccount ?
                             <Loader />
                             : "Sign In"}
                     </Button>
