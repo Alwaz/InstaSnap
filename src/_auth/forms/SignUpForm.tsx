@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod";
@@ -14,15 +14,18 @@ import {
 } from "@/components/ui/form"
 import { Input } from '@/components/ui/input';
 import { Loader } from '@/components/shared';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import { useCreateUserAccount, useSignInAccount } from '@/lib/react-query/queries-and-mutations';
+import { useUserContext } from '@/context/AuthContext';
 
 
 const SignInForm: React.FC = () => {
+    const navigate = useNavigate();
     const { toast } = useToast();
-    const { mutateAsync: createUserAccount, isLoading: isCreatingAccount } = useCreateUserAccount();
-    const { mutateAsync: signInAccount, isLoading: isSigningIn } = useSignInAccount();
+    const { mutateAsync: createUserAccount, isPending: isCreatingAccount } = useCreateUserAccount();
+    const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
+    const { mutateAsync: signInAccount, isPending: isSigningIn } = useSignInAccount();
 
 
 
@@ -59,6 +62,18 @@ const SignInForm: React.FC = () => {
 
                 })
             }
+
+            const isLoggedIn = await checkAuthUser();
+            if (isLoggedIn) {
+                form.reset();
+                navigate('/')
+            } else {
+                return toast({
+                    title: "Sign up failed. Please try again.",
+
+                })
+            }
+
         } catch (error) {
             console.error(error)
         }

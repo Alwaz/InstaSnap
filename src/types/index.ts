@@ -6,9 +6,20 @@ export interface INewUser {
 }
 
 export interface IUser {
-  accountId: string;
+  id: string;
+  accountId?: string;
   email: string;
   username?: string;
   name: string;
-  imageUrl?: URL;
+  imgUrl?: URL;
+  bio: string;
 }
+
+export type IContextType = {
+  user: IUser;
+  isLoading: boolean;
+  setUser: React.Dispatch<React.SetStateAction<IUser>>;
+  isAuthenticated: boolean;
+  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+  checkAuthUser: () => Promise<boolean>;
+};
