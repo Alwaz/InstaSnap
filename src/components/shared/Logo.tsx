@@ -5,7 +5,7 @@ const Logo: React.FC = () => {
     return (
         <div className='sm:w-420 flex justify-center items-center gap-1'>
             <IoCameraOutline className="h-7 w-7 text-lime" />
-            <h1 className="text-3xl font-bold text-white">InstaSnap</h1>
+            <h1 className="md:text-2xl text-xl font-bold text-white">InstaSnap</h1>
         </div>
     )
 }

@@ -78,3 +78,12 @@ export async function getCurrentUser() {
     return error;
   }
 }
+
+export async function logout() {
+  try {
+    const session = account.deleteSession("current");
+    return session;
+  } catch (error) {
+    return error;
+  }
+}

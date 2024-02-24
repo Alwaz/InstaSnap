@@ -16,12 +16,13 @@ export default {
         "2xl": "1400px",
       },
     },
+
     extend: {
       colors: {
         primary: "#1a1a1a",
         secondary: "#282828",
-        lime: "#fffd53",
-        white: "#f4f4f5",
+        lime: "#fffd02",
+        white: "#fafafa",
         light: "#5c5c5c",
       },
       fontFamily: {

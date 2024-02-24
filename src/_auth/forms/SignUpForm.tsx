@@ -78,6 +78,8 @@ const SignInForm: React.FC = () => {
             console.error(error)
         }
     }
+
+
     return (
         <Form {...form}>
             <div className='sm:w-420 flex flex-col justify-center items-center'>

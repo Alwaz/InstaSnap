@@ -14,11 +14,14 @@ import {
 } from "@/components/ui/form"
 import { Input } from '@/components/ui/input';
 import { Loader } from '@/components/shared';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { signInAccount } from '@/lib/appwrite/api';
+import { toast } from '@/components/ui/use-toast';
+import { useUserContext } from '@/context/AuthContext';
 
 const LoginForm: React.FC = () => {
-    const isLoading = false;
-
+    const navigate = useNavigate();
+    const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
     const form = useForm<z.infer<typeof LoginFormSchema>>({
         resolver: zodResolver(LoginFormSchema),
         defaultValues: {
@@ -28,11 +31,37 @@ const LoginForm: React.FC = () => {
     })
 
     // 2. Define a submit handler.
-    function onSubmit(values: z.infer<typeof LoginFormSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values)
+    async function onSubmit(values: z.infer<typeof LoginFormSchema>) {
+        try {
+            // Create a new user session
+            const session = await signInAccount({ email: values.email, password: values.password })
+
+
+            if (!session) {
+                return toast({
+                    title: "Login failed. Please try again.",
+
+                })
+            }
+
+            const isLoggedIn = await checkAuthUser();
+            if (isLoggedIn) {
+                form.reset();
+                navigate('/')
+            } else {
+                return toast({
+                    title: "Login failed. Please try again.",
+
+                })
+            }
+
+        } catch (error) {
+            console.error(error)
+        }
     }
+
+
+    console.log("isUserLoading", isUserLoading)
     return (
         <Form {...form}>
             <div className='sm:w-420 flex flex-col justify-center items-center'>
@@ -72,9 +101,9 @@ const LoginForm: React.FC = () => {
                         )}
                     />
                     <Button className='bg-lime text-primary hover:bg-lime/90' type="submit">
-                        {isLoading ?
+                        {isUserLoading ?
                             <Loader />
-                            : "  Log in"}
+                            : "Log in"}
                     </Button>
 
                     <p className="text-sm font-normal text-white/50 text-center mt-2">
@@ -92,3 +121,5 @@ const LoginForm: React.FC = () => {
 }
 
 export default LoginForm
+
+
