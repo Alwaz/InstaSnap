@@ -31,7 +31,7 @@ const TopBar: React.FC = () => {
                     </Button>
 
                     <Link to={`/profile/${user.id}`} className='flex justify-center items-center'>
-                        <img src={user.imgUrl ?? ""} alt="profile"
+                        <img src={user.imgUrl || "/assets/avatar.png"} alt="profile"
                             className="h-8 w-8 rounded-full" />
                     </Link>
                 </div>

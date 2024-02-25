@@ -144,7 +144,7 @@ const SignInForm: React.FC = () => {
                             </FormItem>
                         )}
                     />
-                    <Button className='bg-lime text-primary hover:bg-lime/90' type="submit">
+                    <Button className='bg-lime text-primary hover:bg-lime/80 duration-300' type="submit">
                         {isCreatingAccount ?
                             <Loader />
                             : "Sign In"}
