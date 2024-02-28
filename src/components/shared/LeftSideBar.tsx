@@ -53,7 +53,6 @@ const LeftSideBar: React.FC = () => {
                             </li>
                         )
                     })}
-
                 </ul>
 
             </div>
