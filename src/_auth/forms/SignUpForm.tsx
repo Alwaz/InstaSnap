@@ -24,8 +24,8 @@ const SignInForm: React.FC = () => {
     const navigate = useNavigate();
     const { toast } = useToast();
     const { mutateAsync: createUserAccount, isPending: isCreatingAccount } = useCreateUserAccount();
-    const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
-    const { mutateAsync: signInAccount, isPending: isSigningIn } = useSignInAccount();
+    const { checkAuthUser } = useUserContext();
+    const { mutateAsync: signInAccount } = useSignInAccount();
 
 
 
