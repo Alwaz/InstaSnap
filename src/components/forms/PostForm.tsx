@@ -87,7 +87,7 @@ const CreatePostForm: React.FC = () => {
                     name="tags"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel className='text-white'>Add Tags (separated by comma ",")</FormLabel>
+                            <FormLabel className='text-white'>Add Tags (separated by comma " , ")</FormLabel>
                             <FormControl>
                                 <Input className='h-12 bg-primary  border-none placeholder:text-light focus-visible:ring-1  focus-visible:ring-offset-1 custom-scrollbar ring-offset-lime/75 rounded-xl' placeholder="Travel, Fitness, Food" {...field} />
                             </FormControl>
