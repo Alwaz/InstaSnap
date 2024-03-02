@@ -13,6 +13,8 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Textarea } from '../ui/textarea'
+import { FileUploader } from '../shared'
+import { Input } from '../ui/input'
 
 
 
@@ -40,21 +42,10 @@ const CreatePostForm: React.FC = () => {
                         <FormItem>
                             <FormLabel className='text-white'>Caption</FormLabel>
                             <FormControl>
-                                <Textarea className='h-12 bg-primary  border-none placeholder:text-light focus-visible:ring-1  focus-visible:ring-offset-1 custom-scrollbar ring-offset-lime/75 rounded-xl' placeholder="shadcn" {...field} />
-                            </FormControl>
-                            <FormMessage className='text-red-600' />
-                        </FormItem>
-                    )}
-                />
-
-                <FormField
-                    control={form.control}
-                    name="files"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel className='text-white'>Upload Files</FormLabel>
-                            <FormControl>
-                                <Textarea className='h-12 bg-primary  border-none placeholder:text-light focus-visible:ring-1  focus-visible:ring-offset-1 custom-scrollbar ring-offset-lime/75 rounded-xl' placeholder="shadcn" {...field} />
+                                <Textarea
+                                    {...field}
+                                    className='h-12 bg-primary  border-none placeholder:text-light focus-visible:ring-1  focus-visible:ring-offset-1 custom-scrollbar ring-offset-lime/75 rounded-xl'
+                                />
                             </FormControl>
                             <FormMessage className='text-red-600' />
                         </FormItem>
@@ -67,15 +58,59 @@ const CreatePostForm: React.FC = () => {
                     name="files"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel className='text-white'>Upload Files</FormLabel>
+                            <FormLabel className='text-white'>Add Photos</FormLabel>
                             <FormControl>
-                                <Textarea className='h-12 bg-primary  border-none placeholder:text-light focus-visible:ring-1  focus-visible:ring-offset-1 custom-scrollbar ring-offset-lime/75 rounded-xl' placeholder="shadcn" {...field} />
+                                <FileUploader />
                             </FormControl>
                             <FormMessage className='text-red-600' />
                         </FormItem>
                     )}
                 />
-                <Button type="submit" className='rounded-xl bg-lime text-primary hover:bg-lime/85  transition duration-200'>Submit</Button>
+
+                <FormField
+                    control={form.control}
+                    name="location"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel className='text-white'>Add Location</FormLabel>
+                            <FormControl>
+                                <Input className='h-12 bg-primary  border-none placeholder:text-light focus-visible:ring-1  focus-visible:ring-offset-1 custom-scrollbar ring-offset-lime/75 rounded-xl' {...field} />
+                            </FormControl>
+                            <FormMessage className='text-red-600' />
+                        </FormItem>
+                    )}
+                />
+
+
+                <FormField
+                    control={form.control}
+                    name="tags"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel className='text-white'>Add Tags (separated by comma ",")</FormLabel>
+                            <FormControl>
+                                <Input className='h-12 bg-primary  border-none placeholder:text-light focus-visible:ring-1  focus-visible:ring-offset-1 custom-scrollbar ring-offset-lime/75 rounded-xl' placeholder="Travel, Fitness, Food" {...field} />
+                            </FormControl>
+                            <FormMessage className='text-red-600' />
+                        </FormItem>
+                    )}
+                />
+
+
+
+
+
+                <div className='flex justify-end items-center gap-4'>
+                    <Button
+                        className='rounded-xl bg-light'>
+                        Cancel
+                    </Button>
+                    <Button
+                        type="submit"
+                        className='rounded-xl bg-lime text-primary hover:bg-lime/85  transition duration-200'>
+                        Submit
+                    </Button>
+                </div>
             </form>
         </Form>
     )
