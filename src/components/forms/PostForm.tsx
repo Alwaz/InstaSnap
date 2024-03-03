@@ -15,10 +15,14 @@ import {
 import { Textarea } from '../ui/textarea'
 import { FileUploader } from '../shared'
 import { Input } from '../ui/input'
+import { Models } from 'appwrite'
 
+type PostFormProps = {
+    post?: Models.Document;
+    type: "Create" | "Update"
+}
 
-
-const CreatePostForm: React.FC = () => {
+const CreatePostForm: React.FC<PostFormProps> = ({ post, action }) => {
     const form = useForm<z.infer<typeof postFormSchema>>({
         resolver: zodResolver(postFormSchema),
         defaultValues: {
@@ -60,7 +64,10 @@ const CreatePostForm: React.FC = () => {
                         <FormItem>
                             <FormLabel className='text-white'>Add Photos</FormLabel>
                             <FormControl>
-                                <FileUploader />
+                                <FileUploader
+                                    fieldChange={field.onChange}
+                                    mediaUrl={post?.imgUrl}
+                                />
                             </FormControl>
                             <FormMessage className='text-red-600' />
                         </FormItem>

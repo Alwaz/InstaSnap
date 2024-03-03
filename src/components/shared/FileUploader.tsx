@@ -1,16 +1,25 @@
 import React, { useCallback, useState } from 'react'
-import { useDropzone } from 'react-dropzone'
+import { FileWithPath, useDropzone } from 'react-dropzone'
 import { IoIosImages } from 'react-icons/io';
 import { Button } from '../ui/button';
+import { convertFileToUrl } from '@/lib/utils';
 
-const FileUploader: React.FC = () => {
+type FileUPloaderProps = {
+    fieldChange: (file: File[]) => void;
+    mediaUrl: string;
+}
+
+
+const FileUploader: React.FC<FileUPloaderProps> = ({ fieldChange, mediaUrl }) => {
     const [file, setFile] = useState<File[]>([]);
-    const [fileUrl, setFileUrl] = useState("");
-    const onDrop = useCallback(acceptedFiles => {
-        // Do something with the files
-        setFile(acceptedFiles);
+    const [fileUrl, setFileUrl] = useState<string>(mediaUrl);
+    const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
 
-    }, [])
+        setFile(acceptedFiles);
+        fieldChange(acceptedFiles)
+        setFileUrl(convertFileToUrl(acceptedFiles[0]))
+
+    }, [file])
 
     const { getRootProps, getInputProps } = useDropzone({
         onDrop, accept: {
@@ -23,9 +32,9 @@ const FileUploader: React.FC = () => {
             {fileUrl ? (
                 <>
                     <div className="flex flex-1 justify-center w-full p-5 lg:p-10">
-                        <img src={fileUrl} alt="file" className="h-80 w-full rounded-2xl object-cover object-top" />
+                        <img src={fileUrl} alt="file" className="h-80 w-full rounded-2xl object-contain" />
                     </div>
-                    <p className="file_uploader-label">Click or drag photo to replace</p>
+                    <p className="text-light text-center text-sm font-normal w-full p-4 border-t-2 border-t-secondary">Click or drag photo to replace</p>
                 </>
 
             ) : (
