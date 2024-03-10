@@ -16,6 +16,15 @@ export const LoginFormSchema = z.object({
   password: z.string().min(8, { message: "Password must be min 8 characters" }),
 });
 
-export const postFormSchema = z.object({
-  caption: z.string(),
+export const PostFormSchema = z.object({
+  caption: z
+    .string()
+    .min(5, { message: "Minimum 5 characters" })
+    .max(2200, { message: "Maximum 2,200 characters" }),
+  file: z.custom<File[]>(),
+  location: z
+    .string()
+    .min(1, { message: "Location is required" })
+    .max(1000, { message: "Maximum 1000 characters" }),
+  tags: z.string(),
 });

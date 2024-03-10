@@ -1,4 +1,4 @@
-import { postFormSchema } from '@/lib/validation'
+import { PostFormSchema } from '@/lib/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
 import { useForm } from 'react-hook-form'
@@ -22,19 +22,23 @@ type PostFormProps = {
     type: "Create" | "Update"
 }
 
-const CreatePostForm: React.FC<PostFormProps> = ({ post, action }) => {
-    const form = useForm<z.infer<typeof postFormSchema>>({
-        resolver: zodResolver(postFormSchema),
+const CreatePostForm: React.FC<PostFormProps> = ({ post, type }) => {
+    const form = useForm<z.infer<typeof PostFormSchema>>({
+        resolver: zodResolver(PostFormSchema),
         defaultValues: {
-            caption: "",
+            caption: post ? post?.caption : "",
+            file: [],
+            location: post ? post.location : "",
+            tags: post ? post.tags.join(",") : ""
         },
     })
 
 
-    function onSubmit(values: z.infer<typeof postFormSchema>) {
+    function onSubmit(values: z.infer<typeof PostFormSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
-        console.log(values)
+
+        console.log("values", values)
     }
     return (
         <Form {...form}>
@@ -59,7 +63,7 @@ const CreatePostForm: React.FC<PostFormProps> = ({ post, action }) => {
 
                 <FormField
                     control={form.control}
-                    name="files"
+                    name="file"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel className='text-white'>Add Photos</FormLabel>
