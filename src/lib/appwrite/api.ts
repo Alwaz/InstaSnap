@@ -1,4 +1,4 @@
-import { INewUser, IUser } from "@/types";
+import { INewPost, INewUser, IUser } from "@/types";
 import { account, appwriteConfig, avatars, databases, storage } from "./config";
 import { ID, Query } from "appwrite";
 
@@ -90,7 +90,7 @@ export async function logout() {
 }
 
 // ====> POST APIS
-export const createPost = async (post: any) => {
+export const createPost = async (post: INewPost) => {
   try {
     // upload file to appwrite storage
     const uploadedFile = await uploadFile(post.file[0]);
