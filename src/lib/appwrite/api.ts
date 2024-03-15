@@ -1,7 +1,8 @@
 import { INewUser, IUser } from "@/types";
-import { account, appwriteConfig, avatars, databases } from "./config";
+import { account, appwriteConfig, avatars, databases, storage } from "./config";
 import { ID, Query } from "appwrite";
 
+// =====> AUTH APIS
 export async function createUserAccount(user: INewUser) {
   const { name, email, password } = user;
   try {
@@ -87,3 +88,83 @@ export async function logout() {
     return error;
   }
 }
+
+// ====> POST APIS
+export const createPost = async (post: any) => {
+  try {
+    // upload file to appwrite storage
+    const uploadedFile = await uploadFile(post.file[0]);
+    if (!uploadedFile) throw Error;
+    // get the file url
+    const fileUrl = getFilePreview(uploadedFile.$id);
+    if (!fileUrl) {
+      await deleteFile(uploadedFile.$id);
+      throw Error;
+    }
+    // Convert tags into array (ill be storing em in array)
+    const tags = post.tags?.replace(/ /g, "").split(",") || [];
+
+    // create new post
+    const newPost = await databases.createDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.postCollectionId,
+      ID.unique(),
+      {
+        creator: post.userId,
+        caption: post.caption,
+        imgUrl: uploadedFile.$id,
+        location: post.location,
+        tags,
+      }
+    );
+    if (!newPost) {
+      await deleteFile(uploadedFile.$id);
+      throw Error;
+    }
+
+    return newPost;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const uploadFile = async (file: File) => {
+  try {
+    const uploadedFile = await storage.createFile(
+      appwriteConfig.storageId,
+      ID.unique(),
+      file
+    );
+
+    return uploadedFile;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getFilePreview = (fileId: string) => {
+  try {
+    const fileUrl = storage.getFilePreview(
+      appwriteConfig.storageId,
+      fileId,
+      2000,
+      2000,
+      "top",
+      100
+    );
+
+    if (!fileUrl) throw Error;
+    return fileUrl;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const deleteFile = async (fileId: string) => {
+  try {
+    await storage.deleteFile(appwriteConfig.storageId, fileId);
+    return { status: "ok" };
+  } catch (error) {
+    return error;
+  }
+};
