@@ -21,7 +21,7 @@ const FileUploader: React.FC<FileUPloaderProps> = ({ fieldChange, mediaUrl }) =>
 
     }, [file])
 
-    const { getRootProps, getInputProps } = useDropzone({
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop, accept: {
             'image/*': ['.png', '.svg', '.jpg', '.jpeg'],
         }
@@ -41,7 +41,7 @@ const FileUploader: React.FC<FileUPloaderProps> = ({ fieldChange, mediaUrl }) =>
                 <div className='flex justify-center items-center flex-col p-7 h-80'>
                     <IoIosImages size={96} color='gray' />
                     <h3 className="text-base font-medium text-light mb-2 mt-6 ">
-                        Drag photo here
+                        {isDragActive ? "Drop photo here" : "Drag photo here"}
                     </h3>
                     <p className="text-light text-sm font-normal mb-6">SVG, PNG, JPG</p>
 

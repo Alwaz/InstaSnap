@@ -11,7 +11,7 @@ const CreatePost: React.FC = () => {
                     <h2 className='font-bold leading-6 text-2xl tracking-wide '>Create Post</h2>
                 </div>
 
-                <PostForm />
+                <PostForm type='Create' />
             </div>
 
         </div>
