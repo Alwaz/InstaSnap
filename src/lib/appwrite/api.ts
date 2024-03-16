@@ -1,4 +1,4 @@
-import { INewPost, INewUser, IUser } from "@/types";
+import { INewPost, INewUser, IUpdatePost, IUser } from "@/types";
 import { account, appwriteConfig, avatars, databases, storage } from "./config";
 import { ID, Query } from "appwrite";
 
@@ -166,6 +166,62 @@ export const deleteFile = async (fileId: string) => {
   try {
     await storage.deleteFile(appwriteConfig.storageId, fileId);
     return { status: "ok" };
+  } catch (error) {
+    return error;
+  }
+};
+
+export const updatePost = async (post: IUpdatePost) => {
+  // check if file exist
+  const hasFileToUpdate = post.file.length > 0;
+  try {
+    let image = {
+      imgUrl: post.imageUrl,
+      imgId: post.imageId,
+    };
+
+    if (hasFileToUpdate) {
+      const uploadedFile = await uploadFile(post.file[0]);
+      if (!uploadedFile) throw Error;
+
+      const fileUrl = getFilePreview(uploadedFile.$id);
+      if (!fileUrl) {
+        await deleteFile(uploadedFile.$id);
+        throw Error;
+      }
+
+      image = { ...image, imgUrl: fileUrl, imgId: uploadedFile.$id };
+
+      // Convert tags into array (ill be storing em in array)
+      const tags = post.tags?.replace(/ /g, "").split(",") || [];
+
+      // update post
+      const updatedPost = await databases.updateDocument(
+        appwriteConfig.databaseId,
+        appwriteConfig.postCollectionId,
+        post.postId,
+        {
+          caption: post.caption,
+          imgUrl: fileUrl,
+          imgId: uploadedFile?.$id,
+          location: post.location,
+          tags,
+        }
+      );
+      if (!updatedPost) {
+        if (hasFileToUpdate) {
+          await deleteFile(image.imgId);
+        }
+        throw Error;
+      }
+
+      // delete old file after update
+      if (hasFileToUpdate) {
+        await deleteFile(post.imageId);
+      }
+
+      return updatedPost;
+    }
   } catch (error) {
     return error;
   }

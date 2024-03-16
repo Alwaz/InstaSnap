@@ -19,7 +19,7 @@ import { Models } from 'appwrite'
 import { useUserContext } from '@/context/AuthContext'
 import { toast } from '../ui/use-toast'
 import { useNavigate } from 'react-router-dom'
-import { useCreatePost } from '@/lib/react-query/queries-and-mutations'
+import { useCreatePost, useUpdatePost } from '@/lib/react-query/queries-and-mutations'
 import { Loader } from 'lucide-react'
 
 type PostFormProps = {
@@ -42,12 +42,12 @@ const CreatePostForm: React.FC<PostFormProps> = ({ post, type }) => {
 
 
     const { mutateAsync: createPost, isPending: isLoadingCreate } = useCreatePost();
+    const { mutateAsync: updatePost, isPending: isLoadingUpdate } = useUpdatePost();
 
 
     async function onSubmit(values: z.infer<typeof PostFormSchema>) {
         const newPost = await createPost({ ...values, userId: user.id });
-        console.log("new post set hy boss", newPost)
-
+        // TODO: Add update post logic here
         if (!newPost) {
             toast({ title: `${type} post failed, Please give it another shot` })
         }
