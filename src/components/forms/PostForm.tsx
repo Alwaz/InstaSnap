@@ -16,6 +16,10 @@ import { Textarea } from '../ui/textarea'
 import { FileUploader } from '../shared'
 import { Input } from '../ui/input'
 import { Models } from 'appwrite'
+import { createPost } from '@/lib/appwrite/api'
+import { useUserContext } from '@/context/AuthContext'
+import { toast } from '../ui/use-toast'
+import { useNavigate } from 'react-router-dom'
 
 type PostFormProps = {
     post?: Models.Document;
@@ -23,6 +27,8 @@ type PostFormProps = {
 }
 
 const CreatePostForm: React.FC<PostFormProps> = ({ post, type }) => {
+    const { user } = useUserContext();
+    const navigate = useNavigate();
     const form = useForm<z.infer<typeof PostFormSchema>>({
         resolver: zodResolver(PostFormSchema),
         defaultValues: {
@@ -34,12 +40,19 @@ const CreatePostForm: React.FC<PostFormProps> = ({ post, type }) => {
     })
 
 
-    function onSubmit(values: z.infer<typeof PostFormSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
+    async function onSubmit(values: z.infer<typeof PostFormSchema>) {
+        const newPost = await createPost({ ...values, userId: user.id });
+        console.log("new post set hy boss", newPost)
 
-        console.log("values", values)
+        if (!newPost) {
+            toast({ title: `${type} post failed, Please give it another shot` })
+        }
+        navigate("/")
     }
+
+
+
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-full max-w-5xl gap-9 bg-secondary rounded-3xl py-4 px-4 md:px-5 ">

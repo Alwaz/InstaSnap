@@ -26,6 +26,8 @@ const FileUploader: React.FC<FileUPloaderProps> = ({ fieldChange, mediaUrl }) =>
             'image/*': ['.png', '.svg', '.jpg', '.jpeg'],
         }
     })
+
+    console.log("file", file)
     return (
         <div {...getRootProps()} className='flex flex-col  justify-center items-center bg-primary rounded-2xl cursor-pointer'>
             <input {...getInputProps()} className='cursor-pointer' />

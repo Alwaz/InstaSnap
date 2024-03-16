@@ -94,6 +94,7 @@ export const createPost = async (post: INewPost) => {
   try {
     // upload file to appwrite storage
     const uploadedFile = await uploadFile(post.file[0]);
+
     if (!uploadedFile) throw Error;
     // get the file url
     const fileUrl = getFilePreview(uploadedFile.$id);
@@ -112,7 +113,8 @@ export const createPost = async (post: INewPost) => {
       {
         creator: post.userId,
         caption: post.caption,
-        imgUrl: uploadedFile.$id,
+        imgUrl: fileUrl,
+        imgId: uploadedFile.$id,
         location: post.location,
         tags,
       }
