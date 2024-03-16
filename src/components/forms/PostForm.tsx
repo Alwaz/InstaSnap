@@ -16,10 +16,11 @@ import { Textarea } from '../ui/textarea'
 import { FileUploader } from '../shared'
 import { Input } from '../ui/input'
 import { Models } from 'appwrite'
-import { createPost } from '@/lib/appwrite/api'
 import { useUserContext } from '@/context/AuthContext'
 import { toast } from '../ui/use-toast'
 import { useNavigate } from 'react-router-dom'
+import { useCreatePost } from '@/lib/react-query/queries-and-mutations'
+import { Loader } from 'lucide-react'
 
 type PostFormProps = {
     post?: Models.Document;
@@ -38,6 +39,9 @@ const CreatePostForm: React.FC<PostFormProps> = ({ post, type }) => {
             tags: post ? post.tags.join(",") : ""
         },
     })
+
+
+    const { mutateAsync: createPost, isPending: isLoadingCreate } = useCreatePost();
 
 
     async function onSubmit(values: z.infer<typeof PostFormSchema>) {
@@ -131,8 +135,9 @@ const CreatePostForm: React.FC<PostFormProps> = ({ post, type }) => {
                     </Button>
                     <Button
                         type="submit"
+                        disabled={isLoadingCreate}
                         className='rounded-xl bg-lime text-primary hover:bg-lime/85  transition duration-200'>
-                        Submit
+                        {isLoadingCreate ? <Loader /> : `${type} Post`}
                     </Button>
                 </div>
             </form>
